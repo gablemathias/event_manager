@@ -30,9 +30,10 @@ contents.each do |row|
     )
 
     legislators = legislators.officials
+    legislator_name = legislators.map(&:name).join(', ')
   rescue StandardError
-    'You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials'
+    legislator_name = 'You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials' # rubocop:disable Layout/LineLength
   end
 
-  puts "#{name} - #{zipcode} - #{legislators}"
+  puts "#{name} - #{zipcode} - #{legislator_name}"
 end
