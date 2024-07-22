@@ -11,15 +11,9 @@ if File.exist? 'event_attendees.csv'
 end
 
 def handle_zipcode(zipcode)
-  if zipcode.nil?
-    '00000'
-  elsif zipcode.size < 5
-    zipcode.rjust(5, '0')
-  elsif zipcode.size > 5
-    zipcode.slice(...5)
-  else
-    zipcode
-  end
+  zipcode = zipcode.to_s
+
+  zipcode.rjust(5, '0')
 end
 
 contents.each do |row|
