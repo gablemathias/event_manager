@@ -11,7 +11,7 @@ if File.exist? 'event_attendees.csv'
 end
 
 def handle_zipcode(zipcode)
-  zipcode.to_s.zipcode.rjust(5, '0')
+  zipcode.to_s.rjust(5, '0')
 end
 
 contents.each do |row|
