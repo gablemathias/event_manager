@@ -34,7 +34,7 @@ if File.exist? 'event_attendees.csv'
 end
 
 contents.each do |row|
-  name = row[:first_name]
+  name = row[:first_name].capitalize
   zipcode = handle_zipcode(row[:zipcode])
   legislator = legislators_by_zipcode(zipcode)
 
