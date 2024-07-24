@@ -33,10 +33,15 @@ if File.exist? 'event_attendees.csv'
   )
 end
 
+template_letter = File.read('form_letter.html')
+
 contents.each do |row|
   name = row[:first_name].capitalize
   zipcode = handle_zipcode(row[:zipcode])
-  legislator = legislators_by_zipcode(zipcode)
+  legislators = legislators_by_zipcode(zipcode)
 
-  puts "#{name} - #{zipcode} - #{legislator}"
+  personal_letter = template_letter.gsub('FIRST_NAME', name)
+  personal_letter.gsub!('LEGISLATORS', legislators)
+
+  puts "#{name} - #{zipcode} - #{legislators}"
 end
