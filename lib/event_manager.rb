@@ -5,7 +5,7 @@ require 'erb'
 puts 'Event Manager Initiliazed!'
 
 def handle_zipcode(zipcode)
-  zipcode.to_s.rjust(5, '0')
+  zipcode.to_s.rjust(5, '0')[0...5]
 end
 
 def legislators_by_zipcode(zipcode) # rubocop:disable Metrics/MethodLength
