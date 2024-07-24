@@ -13,14 +13,11 @@ def legislators_by_zipcode(zipcode) # rubocop:disable Metrics/MethodLength
   civic_info.key = File.read('secret.key').strip
 
   begin
-    legislators = civic_info.representative_info_by_address(
+    civic_info.representative_info_by_address(
       address: zipcode,
       levels: 'country',
       roles: %w[legislatorUpperBody legislatorLowerBody]
-    )
-
-    legislators = legislators.officials
-    legislators.map(&:name).join(', ')
+    ).officials
   rescue StandardError
     'You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials'
   end
@@ -34,15 +31,19 @@ if File.exist? 'event_attendees.csv'
   )
 end
 
-template_letter = File.read('form_letter.html')
+template_letter = File.read('form_letter.erb')
+erb_template = ERB.new template_letter
 
 contents.each do |row|
+  Dir.mkdir('legislators', 777) unless Dir.exist?('legislators')
+
+  id = row[0]
   name = row[:first_name].capitalize
   zipcode = handle_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
 
-  personal_letter = template_letter.gsub('FIRST_NAME', name)
-  personal_letter.gsub!('LEGISLATORS', legislators)
+  form_letter = erb_template.result(binding)
+  file_name = "legislators/#{id}.html"
 
-  puts "#{name} - #{zipcode} - #{legislators}"
+  File.open(file_name, 'w') { |f| f.puts(form_letter) }
 end
