@@ -23,6 +23,14 @@ def legislators_by_zipcode(zipcode) # rubocop:disable Metrics/MethodLength
   end
 end
 
+def create_letter(id, form_letter)
+  Dir.mkdir('legislators', 777) unless Dir.exist?('legislators')
+
+  file_name = "legislators/#{id}.html"
+
+  File.open(file_name, 'w') { |f| f.puts(form_letter) }
+end
+
 if File.exist? 'event_attendees.csv'
   contents = CSV.open(
     'event_attendees.csv',
@@ -35,15 +43,12 @@ template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
 contents.each do |row|
-  Dir.mkdir('legislators', 777) unless Dir.exist?('legislators')
-
   id = row[0]
   name = row[:first_name].capitalize
   zipcode = handle_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
-  file_name = "legislators/#{id}.html"
 
-  File.open(file_name, 'w') { |f| f.puts(form_letter) }
+  create_letter(id, form_letter)
 end
